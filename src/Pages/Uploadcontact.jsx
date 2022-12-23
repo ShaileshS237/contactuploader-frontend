@@ -2,67 +2,63 @@ import React, { useState } from "react";
 import Papa from "papaparse";
 import Navbar from "./Navbar";
 import axios from "axios";
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import {
 	Table,
 	Thead,
 	Tbody,
-	Tfoot,
 	Tr,
 	Th,
 	Heading,
 	Td,
-	TableCaption,
 	TableContainer,
 } from "@chakra-ui/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Allowed extensions for input file
 const allowedExtensions = ["csv"];
 
 const App = () => {
+	function notify(message) {
+		toast(message, {
+			position: "top-right",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "light",
+		});
+	}
+
 	const [parsedData, setparsedData] = useState(null);
-	// This state will store the parsed data
 	const [data, setData] = useState([]);
 
-	// It state will contain the error when
-	// correct file extension is not used
 	const [error, setError] = useState("");
 
-	// It will store the file uploaded by the user
 	const [file, setFile] = useState("");
 
-	// This function will be called when
-	// the file input changes
 	const handleFileChange = (e) => {
 		setError("");
 
-		// Check if user has entered the file
 		if (e.target.files.length) {
 			const inputFile = e.target.files[0];
 
-			// Check the file extensions, if it not
-			// included in the allowed extensions
-			// we show the error
 			const fileExtension = inputFile?.type.split("/")[1];
 			if (!allowedExtensions.includes(fileExtension)) {
 				setError("Please input a csv file");
 				return;
 			}
 
-			// If input type is correct set the state
 			setFile(inputFile);
 		}
 	};
 	const handleParse = () => {
-		// If user clicks the parse button without
-		// a file we show a error
 		if (!file) return setError("Enter a valid file");
 
-		// Initialize a reader which allows user
-		// to read any file or blob.
 		const reader = new FileReader();
 
-		// Event listener on reader when the file
-		// loads, we parse it and set the data.
 		reader.onload = async ({ target }) => {
 			const csv = Papa.parse(target.result, { header: true });
 			const tempData = csv?.data;
@@ -77,6 +73,10 @@ const App = () => {
 			.post("http://localhost:5000/upload", parsedData)
 			.then((result) => {
 				console.log(result);
+				if (result.status === 200) {
+					notify("Data Uploaded Succefully");
+					setparsedData(null);
+				}
 			})
 			.catch((err) => {
 				console.log(err);
@@ -201,6 +201,7 @@ const App = () => {
 			) : (
 				""
 			)}
+			<ToastContainer />
 		</div>
 	);
 };

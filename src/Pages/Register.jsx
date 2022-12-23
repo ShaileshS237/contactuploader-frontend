@@ -130,6 +130,7 @@ export default function Register(props) {
 								colorScheme="green"
 								variant="outline"
 								onClick={register}
+								disabled={!name || !email || !mobile || !password}
 							>
 								Register
 							</Button>

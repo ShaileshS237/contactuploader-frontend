@@ -28,6 +28,8 @@ import { useState } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function Login(props) {
 	const history = useNavigate();
 	const [email, setEmail] = useState("");
@@ -59,7 +61,7 @@ export default function Login(props) {
 			.post("http://localhost:5000/login", item, axiosConfig)
 			.then(async (result) => {
 				console.log(result.status);
-				if (result.status == 200) {
+				if (result.status === 200) {
 					await notify("Login Succesfull");
 					navigate("/");
 				}

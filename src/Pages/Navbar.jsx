@@ -16,9 +16,9 @@ export default function Navbar() {
 			<Link className="item" to="/upload">
 				Upload Contact
 			</Link>
-			<Link className="item" to="/view">
+			{/* <Link className="item" to="/view">
 				View Contact
-			</Link>
+			</Link> */}
 			<Link className="item" to="/login">
 				<button className=" login__btn">Login </button>
 			</Link>
